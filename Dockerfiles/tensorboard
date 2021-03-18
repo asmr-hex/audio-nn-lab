@@ -1,0 +1,5 @@
+# minimal debian w/ python
+FROM python:3.8-slim-buster
+
+# install tensorboard
+RUN pip3 install tensorboard

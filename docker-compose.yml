@@ -1,0 +1,41 @@
+version: "3.0"
+services:
+  tensorboard:
+    image: tensorboard
+    build:
+      context: ./Dockerfiles
+      dockerfile: tensorboard
+    env_file: .env
+    ports:
+      - ${TENSORBOARD_PORT}:${TENSORBOARD_PORT}
+    volumes:
+      - ${ROOT_DIR}:/jupyter
+    command:
+      [
+        "tensorboard",
+        "--logdir=${TENSORBOARD_DIR}",
+        "--port=${TENSORBOARD_PORT}",
+        "--bind_all",
+      ]
+
+  jupyter-server:
+    image: jupyter-server
+    init: true
+    build:
+      context: ./Dockerfiles
+      dockerfile: jupyter
+    env_file: .env
+    ports:
+      - ${JUPYTER_PORT}:${JUPYTER_PORT}
+    volumes:
+      - ${ROOT_DIR}:/jupyter
+    command:
+      [
+        "jupyter",
+        "notebook",
+        "--ip=*",
+        "--port=${JUPYTER_PORT}",
+        "--allow-root",
+        "--notebook-dir=${JUPYTER_DIR}",
+        "--NotebookApp.token=${JUPYTER_TOKEN}",
+      ]
